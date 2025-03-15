@@ -40,5 +40,5 @@ A full-stack application for managing sales leads with real-time updates and a m
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Okuselu/lead-management.git
 cd lead-management
