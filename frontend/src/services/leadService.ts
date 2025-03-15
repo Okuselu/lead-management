@@ -2,19 +2,26 @@ import { Lead } from '@/types/lead';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050/api';
 
+const handleResponse = async (response: Response) => {
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Network response was not ok');
+  }
+  return data.data;
+};
+
 export const leadService = {
   async getAllLeads(): Promise<Lead[]> {
     try {
-      const response = await fetch(`${API_URL}/leads`);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch leads');
-      }
-      const data = await response.json();
-      return data.data;
+      const response = await fetch(`${API_URL}/leads`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      return await handleResponse(response);
     } catch (error) {
       console.error('Error fetching leads:', error);
-      throw error;
+      throw new Error('Failed to fetch leads. Please check your connection and try again.');
     }
   },
 
@@ -27,19 +34,12 @@ export const leadService = {
         },
         body: JSON.stringify(lead),
       });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to create lead');
-      }
-
-      return data.data;
-    } catch (error: any) {
+      return await handleResponse(response);
+    } catch (error) {
       if (error.message.includes('email')) {
         throw new Error('A lead with this email already exists. Please use a different email address.');
       }
-      throw error;
+      throw new Error('Failed to create lead. Please try again.');
     }
   }
 };

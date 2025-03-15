@@ -16,19 +16,23 @@ export default function Home() {
     try {
       const data = await leadService.getAllLeads();
       setLeads(data);
-    } catch (err) {
+    } catch (err: any) { // Type the error parameter
       setError('Failed to load leads');
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadLeads();
+  }, []); // Load leads when component mounts
+
   const handleAddLead = async (newLead: Omit<Lead, '_id' | 'createdAt'>) => {
     try {
       await leadService.createLead(newLead);
       await loadLeads();
       setError(''); // Clear any existing errors
-    } catch (err: any) {
+    } catch (err: any) { // Type the error parameter
       setError(err.message || 'Failed to add lead');
     }
   };
