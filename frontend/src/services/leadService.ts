@@ -35,9 +35,11 @@ export const leadService = {
         body: JSON.stringify(lead),
       });
       return await handleResponse(response);
-    } catch (error) {
-      if (error.message.includes('email')) {
-        throw new Error('A lead with this email already exists. Please use a different email address.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.message.includes('email')) {
+          throw new Error('A lead with this email already exists. Please use a different email address.');
+        }
       }
       throw new Error('Failed to create lead. Please try again.');
     }

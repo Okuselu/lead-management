@@ -16,26 +16,34 @@ export default function Home() {
     try {
       const data = await leadService.getAllLeads();
       setLeads(data);
-    } catch (err: any) { // Type the error parameter
-      setError('Failed to load leads');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to load leads');
+      }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAddLead = async (newLead: Omit<Lead, '_id' | 'createdAt'>) => {
+    try {
+      await leadService.createLead(newLead);
+      await loadLeads();
+      setError('');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to add lead');
+      }
     }
   };
 
   useEffect(() => {
     loadLeads();
   }, []); // Load leads when component mounts
-
-  const handleAddLead = async (newLead: Omit<Lead, '_id' | 'createdAt'>) => {
-    try {
-      await leadService.createLead(newLead);
-      await loadLeads();
-      setError(''); // Clear any existing errors
-    } catch (err: any) { // Type the error parameter
-      setError(err.message || 'Failed to add lead');
-    }
-  };
 
   return (
     <div className="container py-5">
