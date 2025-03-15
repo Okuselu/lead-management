@@ -1,11 +1,10 @@
 import mongoose, { Schema, Document } from "mongoose";
-
-// Define the possible status values for a lead
-export type LeadStatus = "New" | "Engaged" | "Proposal Sent" | "Closed-Won" | "Closed-Lost";
+import { LeadStatus } from "../interfaces/Lead.interface";
 
 // Define the TypeScript interface for a lead document
-export interface ILead extends Document {
-  name: string;
+export interface ILeadDocument extends Document {
+  firstName: string;
+  lastName: string;
   email: string;
   status: LeadStatus;
   createdAt: Date;
@@ -14,7 +13,8 @@ export interface ILead extends Document {
 // Define the Mongoose schema for the lead model
 const LeadSchema: Schema = new Schema(
   {
-    name: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     status: { 
       type: String, 
@@ -28,5 +28,5 @@ const LeadSchema: Schema = new Schema(
 );
 
 // Create and export the Mongoose model
-const Lead = mongoose.model<ILead>("Lead", LeadSchema);
+const Lead = mongoose.model<ILeadDocument>("Lead", LeadSchema);
 export default Lead;

@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 5055;
 const server = app.listen(PORT, () => {
   console.log(
     colors.yellow.bold(
-      `Shopbeta server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+      `Lead-management server running in ${process.env.NODE_ENV} mode on port ${PORT}`
     )
   );
 });
