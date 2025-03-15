@@ -7,6 +7,9 @@ class LeadController {
     try {
       const { firstName, lastName, email, status } = req.body;
       
+      // Add request body logging for debugging
+      console.log('Request body:', req.body);
+
       // Enhanced input validation
       if (!firstName || !lastName) {
         res.status(400).json({ 
@@ -24,16 +27,6 @@ class LeadController {
         return;
       }
 
-      // Basic email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        res.status(400).json({ 
-          success: false, 
-          message: "Please provide a valid email address" 
-        });
-        return;
-      }
-
       const newLead = await LeadService.createLead({ firstName, lastName, email, status });
       res.status(201).json({
         success: true,
@@ -41,27 +34,20 @@ class LeadController {
         data: newLead,
       });
     } catch (error: any) {
-      if (error.code === 11000) {
-        res.status(400).json({ 
-          success: false, 
-          message: "A lead with this email address already exists" 
-        });
-        return;
-      }
+      console.error('Error creating lead:', error);
       res.status(500).json({ 
         success: false, 
-        message: "An error occurred while creating the lead. Please try again." 
+        message: error.message || "Internal server error" 
       });
     }
   }
 
-  // Get all leads
   async getAllLeads(req: Request, res: Response): Promise<void> {
     try {
       const leads = await LeadService.getAllLeads();
       res.status(200).json({ success: true, data: leads });
-      return
     } catch (error: any) {
+      console.error('Error fetching leads:', error);
       res.status(500).json({ success: false, message: error.message });
     }
   }

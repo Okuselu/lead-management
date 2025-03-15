@@ -44,3 +44,10 @@ process.on("unhandledRejection", (err: any) => {
   console.error(colors.red.bold(`Error: ${err.message}`));
   server.close(() => process.exit(1));
 });
+
+
+// Add this before your routes
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, req.body);
+  next();
+});

@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { LeadStatus } from "../interfaces/Lead.interface";
 
-// Define the TypeScript interface for a lead document
 export interface ILeadDocument extends Document {
   firstName: string;
   lastName: string;
@@ -10,12 +9,11 @@ export interface ILeadDocument extends Document {
   createdAt: Date;
 }
 
-// Define the Mongoose schema for the lead model
 const LeadSchema: Schema = new Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, index: true },
     status: { 
       type: String, 
       enum: ["New", "Engaged", "Proposal Sent", "Closed-Won", "Closed-Lost"], 
@@ -23,10 +21,9 @@ const LeadSchema: Schema = new Schema(
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
-// Create and export the Mongoose model
 const Lead = mongoose.model<ILeadDocument>("Lead", LeadSchema);
 export default Lead;
