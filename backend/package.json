@@ -1,12 +1,15 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "scripts": {
+    "dev": "ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts",
     "postinstall": "tsc"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "keywords": [],
   "author": "",
